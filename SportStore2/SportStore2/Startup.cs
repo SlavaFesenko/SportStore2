@@ -16,6 +16,7 @@ namespace SportStore2
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // Transient - new per every call, Scoped - new per request, Singleton - always the same
             services.AddTransient<IProductRepository, FakeProductRepository>();
             services.AddMvc();
         }
