@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SportStore2.Models;
 using SportStore2.Models.RepositoryItems;
 using System;
 using System.Collections.Generic;
