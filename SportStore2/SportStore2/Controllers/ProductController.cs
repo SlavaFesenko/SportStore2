@@ -15,7 +15,7 @@ namespace SportStore2.Controllers
         /// <summary>
         /// Elements per page
         /// </summary>
-        private int _pageSize = 4;
+        public int PageSize { get; set; } = 4;
 
         public ProductController(IProductRepository repo)
         {
@@ -31,7 +31,7 @@ namespace SportStore2.Controllers
         public ViewResult List(int pageNum = 1)
         {
             var sortedProducts = _repository.Products.OrderBy(p => p.ProductID);
-            var paginatedProducts = PaginationHelper.Paginate(sortedProducts, pageNum, _pageSize);
+            var paginatedProducts = PaginationHelper.Paginate(sortedProducts, pageNum, PageSize);
 
             return View(paginatedProducts);
         } 
