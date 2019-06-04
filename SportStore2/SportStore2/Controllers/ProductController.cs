@@ -2,6 +2,7 @@
 using SportStore2.Helpers;
 using SportStore2.Models;
 using SportStore2.Models.RepositoryItems;
+using SportStore2.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,21 @@ namespace SportStore2.Controllers
         public ViewResult List(int pageNum = 1)
         {
             var sortedProducts = _repository.Products.OrderBy(p => p.ProductID);
-            var paginatedProducts = PaginationHelper.Paginate(sortedProducts, pageNum, PageSize);
+            var paginatedProducts = 
+                PaginationHelper.Paginate(sortedProducts, pageNum, PageSize);
 
-            return View(paginatedProducts);
+            var productsListVM = new ProductsListViewModel
+            {
+                Products = paginatedProducts,
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = pageNum,
+                    ItemsPerPage = PageSize,
+                    TotalItems = _repository.Products.Count()
+                }
+            };
+
+            return View(productsListVM);
         } 
 
     }
