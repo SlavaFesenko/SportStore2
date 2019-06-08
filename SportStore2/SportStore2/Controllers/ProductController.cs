@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SportStore2.Helpers;
+using SportStore2.Models;
 using SportStore2.Models.RepositoryItems;
+using SportStore2.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +13,44 @@ namespace SportStore2.Controllers
     public class ProductController : Controller
     {
         private IProductRepository _repository;
+        /// <summary>
+        /// Elements per page
+        /// </summary>
+        public int PageSize { get; set; } = 4;
 
         public ProductController(IProductRepository repo)
         {
             _repository = repo;
         }
 
-        public ViewResult List() => View(_repository.Products);
+        /// <summary>
+        /// https://localhost:port_num/Product/List/?pageNum=2
+        /// Get the list of products with pagination
+        /// </summary>
+        /// <param name="pageNum">Number of page to show</param>
+        /// <returns></returns>
+        public ViewResult List(string category, int pageNum = 1)
+        {
+            var products = _repository.Products;
+            var filteredProducts = products.Where(p => p.Category == null || p.Category == category);
+            var sortedProducts = filteredProducts.OrderBy(p => p.ProductID);
+            var paginatedProducts = 
+                PaginationHelper.Paginate(sortedProducts, pageNum, PageSize);
+
+            var productsListVM = new ProductsListViewModel
+            {
+                Products = paginatedProducts,
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = pageNum,
+                    ItemsPerPage = PageSize,
+                    TotalItems = _repository.Products.Count()
+                },
+                CurrentCategory = category,
+            };
+
+            return View(productsListVM);
+        } 
 
     }
 }
