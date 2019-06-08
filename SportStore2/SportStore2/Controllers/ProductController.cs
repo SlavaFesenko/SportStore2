@@ -29,9 +29,11 @@ namespace SportStore2.Controllers
         /// </summary>
         /// <param name="pageNum">Number of page to show</param>
         /// <returns></returns>
-        public ViewResult List(int pageNum = 1)
+        public ViewResult List(string category, int pageNum = 1)
         {
-            var sortedProducts = _repository.Products.OrderBy(p => p.ProductID);
+            var products = _repository.Products;
+            var filteredProducts = products.Where(p => p.Category == null || p.Category == category);
+            var sortedProducts = filteredProducts.OrderBy(p => p.ProductID);
             var paginatedProducts = 
                 PaginationHelper.Paginate(sortedProducts, pageNum, PageSize);
 
@@ -43,7 +45,8 @@ namespace SportStore2.Controllers
                     CurrentPage = pageNum,
                     ItemsPerPage = PageSize,
                     TotalItems = _repository.Products.Count()
-                }
+                },
+                CurrentCategory = category,
             };
 
             return View(productsListVM);
