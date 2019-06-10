@@ -10,12 +10,15 @@ namespace SportStore2.Components
     public class NavigationMenuViewComponent : ViewComponent
     {
         private IProductRepository repository;
+
         public NavigationMenuViewComponent(IProductRepository repo)
         {
             repository = repo;
         }
+
         public IViewComponentResult Invoke()
         {
+            ViewBag.SelectedCategory = RouteData?.Values["category"];
             var products = repository.Products
                 .Select(x => x.Category)
                 .Distinct()
