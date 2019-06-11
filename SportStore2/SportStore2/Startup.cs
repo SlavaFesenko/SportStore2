@@ -27,6 +27,10 @@ namespace SportStore2
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddMvc();
 
+            services.AddMemoryCache();
+            services.AddSession();
+
+
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
@@ -41,6 +45,8 @@ namespace SportStore2
 
             app.UseStatusCodePages();
             app.UseStaticFiles();
+            app.UseSession();
+
 
             app.UseMvc(routes => {
 
